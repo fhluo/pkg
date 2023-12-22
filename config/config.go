@@ -6,6 +6,7 @@ import (
 	"log/slog"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 var configFilename string
@@ -23,8 +24,12 @@ func Init(filename string) {
 
 	// 添加配置文件目录，设置配置文件名
 	viper.AddConfigPath(path)
-	viper.SetConfigName("config")
-	viper.SetConfigType("toml")
+
+	base := filepath.Base(filename)
+	ext := filepath.Ext(base)
+
+	viper.SetConfigName(strings.TrimSuffix(base, ext))
+	viper.SetConfigType(strings.TrimPrefix(ext, "."))
 
 	// 读取配置文件
 	err = viper.ReadInConfig()
